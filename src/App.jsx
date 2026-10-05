@@ -1,37 +1,79 @@
-import './App.css'
-import HeaderComponent from './components/HeaderComponent'
-import EmployeeComponent from './components/EmployeeComponent'
-import ListEmployeeComponent from './components/ListEmployeeComponent'
-import FooterComponent from './components/FooterComponent'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import FundTransferComponent from './components/FundTransferComponent';
+import './App.css';
 
-import ChatBot from "./components/ChatBot";
+import {
+  BrowserRouter,
+  Navigate,
+  Route,
+  Routes,
+} from 'react-router-dom';
+
+import { AuthProvider } from './auth/AuthContext';
+
+import HeaderComponent from './components/HeaderComponent';
+import FooterComponent from './components/FooterComponent';
+import HomeComponent from './components/HomeComponent';
+import RegistrationComponent from './components/RegistrationComponent';
+import LoginComponent from './components/LoginComponent';
+import ProtectedRoute from './components/ProtectedRoute';
+import EmployeeComponent from './components/EmployeeComponent';
+import ListEmployeeComponent from './components/ListEmployeeComponent';
+import FundTransferComponent from './components/FundTransferComponent';
+import ChatBot from './components/ChatBot';
 
 function App() {
   return (
-    <>
-      <BrowserRouter>
-      <div className="app-container">
-        <HeaderComponent />
-        <main className="content">
-        <Routes>
-          {/* //http://localhost:3000 */}
-          <Route path='/' element={<ListEmployeeComponent />}></Route>
-          {/* //http://localhost:3000/employees */}
-          <Route path='/employees' element={<ListEmployeeComponent />}></Route>
-          {/* //http://localhost:3000/add-employee */}
-          <Route path='/add-employee' element={ <EmployeeComponent /> }></Route>
-          {/* //http://localhost:3000/edit-employee/1 */}
-          <Route path='/edit-employee/:id' element = { <EmployeeComponent /> }></Route>
-          <Route path='/fund-transfer' element={<FundTransferComponent />} ></Route>
-        </Routes>
-        </main>
-        <FooterComponent />
-        <ChatBot />
+    <BrowserRouter>
+      <AuthProvider>
+        <div className="app-container">
+          <HeaderComponent />
+
+          <main className="content">
+            <Routes>
+              {/* Public routes */}
+              <Route path="/" element={<HomeComponent />} />
+
+              <Route
+                path="/register"
+                element={<RegistrationComponent />}
+              />
+
+              <Route path="/login" element={<LoginComponent />} />
+
+              {/* Protected routes */}
+              <Route element={<ProtectedRoute />}>
+                <Route
+                  path="/fund-transfer"
+                  element={<FundTransferComponent />}
+                />
+
+                <Route
+                  path="/employees"
+                  element={<ListEmployeeComponent />}
+                />
+
+                <Route
+                  path="/add-employee"
+                  element={<EmployeeComponent />}
+                />
+
+                <Route
+                  path="/edit-employee/:id"
+                  element={<EmployeeComponent />}
+                />
+              </Route>
+
+              {/* Unknown route */}
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </main>
+
+          <FooterComponent />
+
+          <ChatBot />
         </div>
-      </BrowserRouter>
-    </>
-  )
+      </AuthProvider>
+    </BrowserRouter>
+  );
 }
-export default App
+
+export default App;

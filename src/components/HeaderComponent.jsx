@@ -1,43 +1,64 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
+import { useAuth } from "../auth/AuthContext";
 
-const HeaderComponent = () => {
-    return (
-        <div>
-            <header>
-                <nav className='navbar navbar-dark bg-dark navbar-expand-lg'>
-                    <div className="container-fluid">
+function HeaderComponent() {
 
-                        <Link className="navbar-brand" to="/">
-                            Employee Management System
-                        </Link>
+  const { isAuthenticated, logout } = useAuth();
 
-                        <div className="navbar-nav">
+  return (
+    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div className="container-fluid">
 
-                            <Link
-                                className="nav-link text-white"
-                                to="/employees">
-                                Employees
-                            </Link>
+        <Link className="navbar-brand" to="/">
+          Employee Management System
+        </Link>
 
-                            <Link
-                                className="nav-link text-white"
-                                to="/add-employee">
-                                Add Employee
-                            </Link>
+        <div className="navbar-nav ms-auto">
 
-                            <Link
-                                className="nav-link text-white"
-                                to="/fund-transfer">
-                                Fund Transfer
-                            </Link>
+          {!isAuthenticated && (
+            <>
+              <Link className="nav-link" to="/">
+                Home
+              </Link>
 
-                        </div>
-                    </div>
-                </nav>
-            </header>
+              <Link className="nav-link" to="/register">
+                Register
+              </Link>
+
+              <Link className="nav-link" to="/login">
+                Login
+              </Link>
+            </>
+          )}
+
+          {isAuthenticated && (
+            <>
+              <Link className="nav-link" to="/employees">
+                Employees
+              </Link>
+
+              <Link className="nav-link" to="/add-employee">
+                Add Employee
+              </Link>
+
+              <Link className="nav-link" to="/fund-transfer">
+                Fund Transfer
+              </Link>
+
+              <button
+                className="btn btn-danger ms-3"
+                onClick={logout}
+              >
+                Logout
+              </button>
+            </>
+          )}
+
         </div>
-    );
-};
+
+      </div>
+    </nav>
+  );
+}
 
 export default HeaderComponent;
